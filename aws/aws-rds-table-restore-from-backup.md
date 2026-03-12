@@ -11,7 +11,6 @@
 
 本文將說明在 RDS 上如何操作自動備份檔做還原，以及利用已還原的新執行個體進行部分 Table 還原。  
 
-<p class="callout info" id="mrk-1">首次操作 RDS，若有說明不足或錯誤之處請不吝於指正。</p>  
 <p class="callout info" id="mrk-2">本文包含在 PC 以 HeidiSQL 操作 DB 備份還原步驟僅供參考，實際以個人使用習慣為主。</p> 
 
 
