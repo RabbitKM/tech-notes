@@ -1,13 +1,13 @@
+# 利用 RDS 自動備份檔還原部分 Table 資料
+
 # 文件說明
 
 ## 建立動機
----
 紀錄 RDS 還原相關操作步驟  
 
 ## 文件描述
----
-2025/5/13 於 PFH eshop 開發自行上傳 Excel，導致部分 Table 資料錯誤，故申請回滾至 2025/5/12。  
-由於並無事前通知備份 DB，故利用 RDS 自動備份檔還原相關 Table。  
+2025/5/13 開發於專案中自行上傳 Excel，導致部分 Table 日期資料被覆寫，故申請回滾至 2025/5/12。  
+在無事前手動備份的情況下，利用 RDS 自動備份檔還原相關 Table。  
 
 本文將說明在 RDS 上如何操作自動備份檔做還原，以及利用已還原的新執行個體進行部分 Table 還原。  
 
@@ -18,7 +18,6 @@
 # 操作說明或步驟
 
 ## RDS 還原操作
----
 #### 1. 檢查最早可還原時間點
 進入目標 RDS 執行個體，點選「維護與備份」
 ![](aws-rds-table-restore-from-backup_images/image-1747212589366.png)  
@@ -46,13 +45,11 @@
 下列端點位置皆可連線成功，暫不清楚差別：  
 * 端點1：  
 ![](aws-rds-table-restore-from-backup_images/image-1747274268263.png)  
-<br>
   
 * 端點2：  
 ![](aws-rds-table-restore-from-backup_images/image-1747274088752.png)  
 
 ## 在 PC 使用 HeidiSQL 做還原
----
 #### 1. 連線至新執行個體
 複製原有連線設定，只更改主機名稱  
 ![](aws-rds-table-restore-from-backup_images/image-1747274578641.png)   
@@ -62,8 +59,8 @@
 點選「工具」選擇「匯出資料為 SQL 腳本」  
 ![](aws-rds-table-restore-from-backup_images/image-1747276693982.png)  
 
-確認 <font color=FF0000>相關設定</font> 後匯出 DB（需包含 Table 結構+資料）  
-並記錄欲還原 Table <font color=#008000>個別筆數</font>，做為稍後還原核對使用  
+確認 **相關設定** 後匯出 DB（需包含 Table 結構+資料）  
+並記錄欲還原 Table **個別筆數**，做為稍後還原核對使用  
 ![](aws-rds-table-restore-from-backup_images/image-1747281616993.png)  
 
 匯出的 SQL 檔即為 RDS 還原之資料（時間點：2025/5/12 22:00:00）  
@@ -78,7 +75,7 @@
   在 HeidiSQL 切換至原 eshop 專案中出問題的資料庫  
   一樣使用「匯出資料為 SQL 腳本」工具匯出 SQL  
   ![](aws-rds-table-restore-from-backup_images/image-1747281267387.png)  
-<br>
+
 * RDS 快照  
   進入 RDS 原專案的執行個體，選擇頁籤「維護與備份」  
   下滑至「快照」區塊，點選「建立快照」  
@@ -88,7 +85,7 @@
 
 #### 4. Import 新執行個體 Table 至原專案中的 DB
 在 HeidiSQL 開啟原 PFH eshop 專案中的資料庫  
-並將 <font color=FF0000>新執行個體</font> 的 SQL 檔開啟，複製內容至 HeidiSQL 貼上（或在「檔案」點擇「載入 SQL 檔案」）  
+並將 **新執行個體** 的 SQL 檔開啟，複製內容至 HeidiSQL 貼上（或在「檔案」點擇「載入 SQL 檔案」）  
 <p class="callout info" id="mrk-3">若匯出時有觸發器 SQL 檔，需要跟著執行，因為在 Drop Table 時，原本的觸發器會消失。</p>  
 
 ![](aws-rds-table-restore-from-backup_images/image-1747283326764.png)  
@@ -109,12 +106,10 @@ SELECT COUNT(*) FROM table_name;
 
 # 補充
 ## 刪除新執行個體
----
 新執行個體在匯出 DB 資料及確認沒問題後，於 RDS 進行刪除以降低資源占用。
 
 ## 較安全的 Table 還原方式
----
-<p class="callout info" id="mrk-4">執行還原 SQL 前先將 SQL 內新建 Table 改名 (xx<font color=FF0000>_new</font>)，待執行後確認新表沒問題，再使用 <font color=FF0000>RENAME 同時替換</font>新舊 Table 名稱。</p>  
+<p class="callout info" id="mrk-4">執行還原 SQL 前先將 SQL 內新建 Table 改名 (xx**_new**)，待執行後確認新表沒問題，再使用 **RENAME 同時替換**新舊 Table 名稱。</p>  
 <p class="callout info" id="mrk-5">原因：可先確保還原的 Table 一切無誤後，再替換運行中的 Table，避免運行中的 Table 有瞬間中斷及資料消失之情況。</p>
 
 #### 1. Export DB 後先修改 SQL 檔中的表名
@@ -130,7 +125,7 @@ SELECT COUNT(*) FROM table_name;
 
 #### 3. 確認沒問題後將新舊 Table 名稱替換
 使用 RENAME 可同時替換多張表  
-<font color=FF0000>注意順序</font>：先改運行中的表名，再改新建的表名  
+**注意順序**：先改運行中的表名，再改新建的表名  
 ![](aws-rds-table-restore-from-backup_images/image-1747387454468.png)  
 
 執行 RENAME 後，檢查確實已替換完成  

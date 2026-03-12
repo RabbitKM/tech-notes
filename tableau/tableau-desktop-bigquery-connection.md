@@ -1,3 +1,4 @@
+# Tableau Desktop 新增 BigQuery 連線 & 資料來源取代
 ## 新增BigQuery連線
 
 #### Step1. 在連線窗格中選取 Google BigQuery
@@ -152,6 +153,6 @@
 ## 參考資料 
 * Google BigQuery - Tableau  
 [https://help.tableau.com/current/pro/desktop/zh-tw/examples_googlebigquery.htm](https://help.tableau.com/current/pro/desktop/zh-tw/examples_googlebigquery.htm)  
-<br>  
+
 * 取代資料來源 - Tableau  
 [https://help.tableau.com/current/pro/desktop/zh-tw/connect_basic_replace.htm](https://help.tableau.com/current/pro/desktop/zh-tw/connect_basic_replace.htm)
